@@ -47,6 +47,22 @@ p{
     }
 }
 `
+const Intro = styled.div`
+display:flex;
+align-items:center;
+justify-content:space-around;
+
+input{
+    width:15vw;
+    height:3vh;
+    border:none;
+    border-radius:10px;
+    color:black;
+    font-size:1.5vh;
+    font-weight:bold;
+}
+`
+
 const Footer = styled.footer`
 height:15vh;
 margin-top:5vh;
@@ -68,19 +84,24 @@ button{
 `
 
 
-const ApiFilmes = axios.create({
+const ApiSeries = axios.create({
     baseURL:"https://api.themoviedb.org/3/tv/popular?api_key=6008b364d3170c211c961b52139d529c"
 })
 
 export default class Movies extends React.Component{
 state = {
-    ListF:[]
+    listS:[],
+    seriesInput:[]
 }
 
 async componentDidMount(){
-    const Response = await ApiFilmes.get()
+   this.getSeries()
+}
 
-    const Movies = Response.data.results.map((item) => {
+getSeries = async () =>{
+    const Response = await ApiSeries.get()
+
+    const TV = Response.data.results.map((item) => {
         return {
             ...item,
             poster_path: `https://image.tmdb.org/t/p/w500/${item.poster_path}`
@@ -89,15 +110,40 @@ async componentDidMount(){
         
     })
     this.setState({
-        ListF:Movies
+        listS:TV,
+        seriesInput:TV
     })
 }
+
+filtrarSeies = (event) =>{
+    const {listS} = this.state
+
+    if(event.target.value === ""){
+        this.setState({
+            seriesInput:listS
+        })
+        return;
+    }
+
+    const covertSeries = listS.filter((item) => {
+        if(item.title.toLowerCase().includes(event.target.value.toLowerCase)){
+            return true
+        }
+    })
+    this.setState({
+        seriesInput:covertSeries
+    })
+}
+
     render(){
-        let {ListF} = this.state
+        let {listS} = this.state
         return(
             <>
-            <T1 id="voltar">Series</T1>
-            {ListF.map((item) => (
+            <Intro>
+                <T1 id="voltar">Series</T1>
+                <input type="text"  placeholder="Digite sua series aqui bb..." onChange={this.filtrarSeies}/>
+            </Intro>
+            {listS.map((item) => (
                 <ListItem key={item.id}>
                     <h3>{item.name}</h3>
                     <figure>

@@ -131,7 +131,7 @@ getFilmes = async () =>{
         }
         
         const convertFilmes = listF.filter((item) => {
-            if(item.title.toLowercase().includes(event.target.value.toLowercase())){
+            if(item.title.toLowerCase().includes(event.target.value.toLowerCase())){
                 return true
             }
             })
@@ -146,14 +146,13 @@ getFilmes = async () =>{
     
 
     render(){
-        let {fistF,filmesInput} = this.state
         return(
             <>
             <Intro>
                 <T1 id="voltar">Filmes</T1>
-                <input type="text" placeholder="Digite seu filme bb..." onChange={filmesInput} />
+                <input type="text" placeholder="Digite seu filme bb..." onChange={this.filtrarFilmes} />
             </Intro>
-            {filmesInput.map((item) => (
+            {this.state.filmesInput.map((item) => (
                 <ListItem key={item.id}>
                     <h3>{item.title}</h3>
                     <figure>
@@ -173,4 +172,3 @@ getFilmes = async () =>{
         )
     }
 }
-{/* <Carousel> */}
